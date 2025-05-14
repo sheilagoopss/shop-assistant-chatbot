@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Send, SparklesIcon } from "lucide-react"
 import Image from "next/image"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
+import InstagramPost from "@/components/instagram-post"
 
 // Define message types
 type MessageRole = "assistant" | "user"
@@ -110,52 +111,50 @@ const predefinedResponses: Record<string, React.ReactNode> = {
     </div>
   ),
   "Can I see this week's Instagram posts?": (
-    <div>
+    <div className="space-y-6">
       <p>Of course! Here are the Instagram posts we&apos;ve shared for your shop this week:</p>
 
-      <div className="mt-3 p-3 bg-pink-50 rounded-md">
-        <p className="font-semibold">Monday - May 12</p>
-        <p className="mt-1 font-medium">Post:</p>
-        <p>
-          Check out this ring from my Porans collection. it&apos;s a handcrafted sterling silver ring with a stunning
-          10mm natural white pearl.
-        </p>
-        <p className="mt-1">the detailed oxidized finish gives it a rustic, antique charm.</p>
-        <p className="mt-1">the intricate branch design wrapping around the pearl makes it truly unique.</p>
-        <p className="mt-1">perfect for adding a touch of elegance to any outfit. 🌿✨</p>
-        <p className="mt-2">
-          #ring #handmadejewellery #jewelry #finejewelry #jewelrylover
-          <br />📸 <span className="text-pink-500">View Post</span>
-        </p>
-      </div>
+      <div className="flex gap-4 overflow-x-auto pb-4">
+        <div className="w-[280px] flex-shrink-0">
+          <InstagramPost
+            imageSrc="/images/1.jpeg"
+            caption={`Check out this ring from my collection. it's a handcrafted sterling silver ring with a stunning 10mm natural white pearl.
 
-      <div className="mt-3 p-3 bg-pink-50 rounded-md">
-        <p className="font-semibold">Wednesday - May 14</p>
-        <p className="mt-1 font-medium">Post:</p>
-        <p>
-          This chain bracelet ring with moonstone and amethyst gemstones is a stunner. it has a heart-shaped ring
-          that&apos;s linked to the bracelet, making it whimsical yet elegant.
-        </p>
-        <p className="mt-1">
-          designed by Amir Poran, it&apos;s a unique handmade piece from our eco-friendly workshop. 🌿🌸
-        </p>
-        <p className="mt-2">
-          #chainbracelet #handmadejewellery #jewelrylover
-          <br />📸 <span className="text-pink-500">View Post</span>
-        </p>
-      </div>
+the detailed oxidized finish gives it a rustic, antique charm.
 
-      <div className="mt-3 p-3 bg-pink-50 rounded-md">
-        <p className="font-semibold">Friday - May 16</p>
-        <p className="mt-1 font-medium">Post:</p>
-        <p>Here&apos;s the sterling silver wide cuff bracelet with gemstones by Amir Poran.</p>
-        <p className="mt-1">this beauty shines with its wavy, textured design and vibrant purple gemstones.</p>
-        <p className="mt-1">handcrafted in khalil, it&apos;s a piece of art that stands out on any wrist.</p>
-        <p className="mt-1">and there&apos;s a matching ring and earrings too 😉</p>
-        <p className="mt-2">
-          #jewellery #handmadejewellery #jewelrylover
-          <br />📸 <span className="text-pink-500">View Post</span>
-        </p>
+the intricate branch design wrapping around the pearl makes it truly unique.
+
+perfect for adding a touch of elegance to any outfit. 🌿✨
+
+#ring #handmadejewellery #jewelry #finejewelry #jewelrylover`}
+          />
+        </div>
+
+        <div className="w-[280px] flex-shrink-0">
+          <InstagramPost
+            imageSrc="/images/2.jpeg"
+            caption={`This chain bracelet ring with moonstone and amethyst gemstones is a stunner. it has a heart-shaped ring that's linked to the bracelet, making it whimsical yet elegant.
+
+designed in our eco-friendly workshop, it's a unique handmade piece. 🌿🌸
+
+#chainbracelet #handmadejewellery #jewelrylover`}
+          />
+        </div>
+
+        <div className="w-[280px] flex-shrink-0">
+          <InstagramPost
+            imageSrc="/images/3.jpeg"
+            caption={`Here's our sterling silver wide cuff bracelet with gemstones.
+
+this beauty shines with its wavy, textured design and vibrant purple gemstones.
+
+handcrafted with care, it's a piece of art that stands out on any wrist.
+
+and there's a matching ring and earrings too 😉
+
+#jewellery #handmadejewellery #jewelrylover`}
+          />
+        </div>
       </div>
     </div>
   ),
