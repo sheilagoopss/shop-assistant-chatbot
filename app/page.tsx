@@ -9,6 +9,18 @@ import { Send, SparklesIcon } from "lucide-react"
 import Image from "next/image"
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 import InstagramPost from "@/components/instagram-post"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select"
+import { format } from "date-fns"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 // Define message types
 type MessageRole = "assistant" | "user"
@@ -18,6 +30,25 @@ interface Message {
   role: MessageRole
   content: string | React.ReactNode
 }
+
+// Product data for dropdown
+const products = [
+  {
+    id: "987654321",
+    title: "Multistone Opal Women's Watch",
+    image: "/images/watch.jpeg",
+  },
+  {
+    id: "876543210",
+    title: "Silver Garnet Earrings",
+    image: "/images/earring.jpeg",
+  },
+  {
+    id: "765432109",
+    title: "Silver Cuff Bracelet",
+    image: "/images/bracelet.jpeg",
+  },
+]
 
 // Predefined Q&A pairs
 const predefinedResponses: Record<string, React.ReactNode> = {
@@ -158,7 +189,19 @@ and there's a matching ring and earrings too 😉
       </div>
     </div>
   ),
+  "Can you help me schedule an Instagram post for one of my products?": (
+    <ScheduleInstagramPost />
+  ),
 }
+
+// Add the new question to the quick suggestion buttons (both initial and ongoing chat)
+const quickSuggestions = [
+  "Can you give me a store performance update?",
+  "Which of my products are performing best right now?",
+  "Show me the new product images you made.",
+  "Can I see this week's Instagram posts?",
+  "Can you help me schedule an Instagram post for one of my products?",
+]
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
@@ -208,6 +251,8 @@ export default function ChatPage() {
         foundResponse = predefinedResponses["Which of my products are performing best right now?"]
       } else if (userInputLower.includes("product images") || userInputLower.includes("new product images")) {
         foundResponse = predefinedResponses["Show me the new product images you made."]
+      } else if (userInputLower.includes("instagram") && userInputLower.includes("schedule")) {
+        foundResponse = predefinedResponses["Can you help me schedule an Instagram post for one of my products?"]
       } else if (userInputLower.includes("instagram") || userInputLower.includes("this week's instagram")) {
         foundResponse = predefinedResponses["Can I see this week's Instagram posts?"]
       }
@@ -321,7 +366,7 @@ export default function ChatPage() {
                   </Button>
                 </form>
                 <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                  {Object.keys(predefinedResponses).map((suggestion) => (
+                  {quickSuggestions.map((suggestion) => (
                     <button
                       key={suggestion}
                       onClick={() => handleSuggestionClick(suggestion)}
@@ -347,7 +392,7 @@ export default function ChatPage() {
                   </Button>
                 </form>
                 <div className="mt-4 flex gap-2 w-full overflow-hidden">
-                  {Object.keys(predefinedResponses).slice(1).map((suggestion) => (
+                  {quickSuggestions.slice(1).map((suggestion) => (
                     <Tooltip key={suggestion}>
                       <TooltipTrigger asChild>
                         <button
@@ -370,5 +415,169 @@ export default function ChatPage() {
         </div>
       </div>
     </TooltipProvider>
+  )
+}
+
+// Add the ScheduleInstagramPost component
+function ScheduleInstagramPost() {
+  const [selectedProduct, setSelectedProduct] = useState<string | undefined>(undefined)
+  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [selectedTime, setSelectedTime] = useState<string>("12:00")
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const timeOptions = [
+    "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"
+  ]
+
+  const handleSubmit = () => {
+    if (!selectedProduct || !date) return
+    setIsSubmitted(true)
+  }
+
+  const productCaptions = {
+    "987654321": `Check out this unique sterling silver cuff watch with inlaid garnets, opal gemstones.
+
+perfect for adding a touch of elegance to any outfit.
+
+tick-tock, it's time to shine ⌚✨
+
+#jewellery #handmadejewellery #finejewelry`,
+    "876543210": `These unique silver teardrop earrings with garnet stones are a true piece of autumn. 
+
+the elegant design and the deep red garnet make them stand out. and embody tranquility and natural beauty 🌿.
+
+#earrings #handmadejewellery #jewellerylover`,
+    "765432109": `Well, here's a sterling silver cuff bracelet that doesn't scream "i'm trying too hard."
+
+crafted with intricate engravings, it's got circles and lines dancing around like they've got somewhere better to be.
+
+this piece is unisex, because who needs labels anyway? 😏✨
+
+#jewelry #finejewelry #handmadejewellery`
+  }
+
+  if (isSubmitted) {
+    const selectedProductData = products.find(p => p.id === selectedProduct)
+    return (
+      <div className="flex justify-start">
+        <div className="h-10 w-10 rounded-full overflow-hidden mr-2 flex-shrink-0">
+          <Image src="/images/emma.jpg" alt="Emma" width={40} height={40} className="object-cover" />
+        </div>
+        <div className="max-w-[80%] p-4 rounded-[40px] bg-white text-black">
+          <p className="mb-4">Great! I've scheduled your Instagram post for {format(date!, "MMMM d, yyyy")} at {selectedTime}. Here's what will be posted:</p>
+          
+          <div className="w-[280px]">
+            <InstagramPost
+              imageSrc={selectedProductData?.image || ""}
+              caption={productCaptions[selectedProduct as keyof typeof productCaptions]}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <p>Absolutely! Just select the product you'd like to feature and choose the date you'd like it to go live.<br />👇</p>
+      <div className="mt-6 flex flex-col gap-4 max-w-md">
+        <div>
+          <label className="block mb-2 text-base font-medium text-pink-700">Product</label>
+          <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+            <SelectTrigger className="bg-white border-pink-300 focus:ring-pink-500 h-14 rounded-2xl text-base px-4">
+              <SelectValue placeholder="Choose a product">
+                {selectedProduct ? products.find((p) => p.id === selectedProduct)?.title : "Choose a product"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent className="z-50">
+              {products.map((product) => (
+                <SelectItem key={product.id} value={product.id} className="flex items-center gap-3 py-3 px-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                      <Image src={product.image} alt={product.title} width={40} height={40} className="object-cover w-10 h-10" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-base">{product.title}</span>
+                      <span className="text-xs text-gray-500">ID: {product.id}</span>
+                    </div>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-2 text-base font-medium text-pink-700">Date</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal bg-white border-pink-300 focus:ring-pink-500 h-14 rounded-2xl text-base px-4",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : "Pick a date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-4" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  className="rounded-2xl"
+                  classNames={{
+                    months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                    month: "space-y-4",
+                    caption: "flex justify-center pt-1 relative items-center text-lg font-medium",
+                    caption_label: "text-pink-700",
+                    nav: "space-x-1 flex items-center",
+                    nav_button: "h-8 w-8 bg-transparent p-0 opacity-50 hover:opacity-100 text-pink-500 hover:bg-pink-100 rounded-full",
+                    nav_button_previous: "absolute left-1",
+                    nav_button_next: "absolute right-1",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "flex",
+                    head_cell: "text-pink-700 rounded-md w-12 font-medium text-base",
+                    row: "flex w-full mt-2",
+                    cell: "h-12 w-12 text-center text-base p-0 relative focus-within:relative focus-within:z-20",
+                    day: "h-12 w-12 p-0 font-normal aria-selected:opacity-100 hover:bg-pink-100 rounded-full",
+                    day_selected: "bg-pink-300 text-white hover:bg-pink-400 hover:text-white focus:bg-pink-400 focus:text-white rounded-full",
+                    day_today: "bg-pink-100 text-pink-700 rounded-full",
+                    day_outside: "text-gray-400 opacity-50",
+                    day_disabled: "text-gray-400 opacity-50",
+                    day_range_middle: "aria-selected:bg-pink-50 aria-selected:text-pink-700",
+                    day_hidden: "invisible",
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div>
+            <label className="block mb-2 text-base font-medium text-pink-700">Time</label>
+            <Select value={selectedTime} onValueChange={setSelectedTime}>
+              <SelectTrigger className="bg-white border-pink-300 focus:ring-pink-500 h-14 rounded-2xl text-base px-4">
+                <SelectValue>{selectedTime}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {timeOptions.map((time) => (
+                  <SelectItem key={time} value={time}>
+                    {time}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <Button
+          onClick={handleSubmit}
+          disabled={!selectedProduct || !date}
+          className="mt-2 bg-pink-500 hover:bg-pink-600 h-14 rounded-2xl text-base"
+        >
+          Schedule Post
+        </Button>
+      </div>
+    </div>
   )
 }
