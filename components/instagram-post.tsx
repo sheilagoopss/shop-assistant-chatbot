@@ -19,15 +19,10 @@ export default function InstagramPost({
       {/* Post header */}
       <div className="flex items-center justify-between p-3 border-b">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-pink-500">
-            <Image 
-              src="/images/michelle.jpg" 
-              alt={username} 
-              width={32} 
-              height={32} 
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/images/michelle.jpg" alt="Michelle" />
+            <AvatarFallback>MJ</AvatarFallback>
+          </Avatar>
           <div className="flex flex-col">
             <span className="text-sm font-semibold">{username}</span>
             {location && <span className="text-xs">{location}</span>}

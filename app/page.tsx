@@ -21,6 +21,7 @@ import { format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { isValidElement } from "react"
 
 // Define message types
 type MessageRole = "assistant" | "user"
@@ -48,159 +49,6 @@ const products = [
     title: "Silver Cuff Bracelet",
     image: "/images/bracelet.jpeg",
   },
-]
-
-// Predefined Q&A pairs
-const predefinedResponses: Record<string, React.ReactNode> = {
-  "Can you give me a store performance update?": (
-    <div>
-      <p>Here&apos;s a quick performance update for the past 7 days:</p>
-      <p className="mt-2">
-        Views: 2,145 (⬆️ up 18%)
-        <br />
-        Sales: 34 orders (⬇️ down 9%)
-        <br />
-        Revenue: $1,021.50
-        <br />
-        Conversion Rate: 1.59% (⬇️ down from 1.87%)
-      </p>
-      <p className="mt-2">
-        Your traffic is growing, which is great! That means your visibility is improving, likely thanks to optimized
-        listings and social content. Offer a time-limited promotion (e.g., 10% off for 48 hours) to boost conversions.
-      </p>
-    </div>
-  ),
-  "Which of my products are performing best right now?": (
-    <div>
-      <p>Here are your top 3 performing listings this week:</p>
-
-      <div className="mt-3 p-3 bg-pink-50 rounded-md">
-        <p className="font-semibold">1. Rainbow Tourmaline Stacking Ring</p>
-        <p>
-          • Listing ID: 987654321
-          <br />• Views: 512 | Favorites: 38 | Orders: 12
-          <br />🔗 <span className="text-pink-500">View on Etsy</span>
-        </p>
-        <p className="mt-2">
-          This one&apos;s really gaining traction. It might be worth highlighting in your next Instagram post or
-          featuring in a limited-time offer.
-        </p>
-      </div>
-
-      <div className="mt-3 p-3 bg-pink-50 rounded-md">
-        <p className="font-semibold">2. Minimalist Gold Hoop Earrings – 14K</p>
-        <p>
-          • Listing ID: 876543210
-          <br />• Views: 436 | Favorites: 27 | Orders: 9<br />🔗 <span className="text-pink-500">View on Etsy</span>
-        </p>
-        <p className="mt-2">
-          A consistent favorite! Clean designs like this often do well with updated close-up shots or lifestyle reels.
-        </p>
-      </div>
-
-      <div className="mt-3 p-3 bg-pink-50 rounded-md">
-        <p className="font-semibold">3. Dainty Birthstone Charm Necklace</p>
-        <p>
-          • Listing ID: 765432109
-          <br />• Views: 398 | Favorites: 31 | Orders: 8<br />🔗 <span className="text-pink-500">View on Etsy</span>
-        </p>
-        <p className="mt-2">
-          This one has great gift appeal — a carousel post or customer review might help drive more traffic.
-        </p>
-      </div>
-    </div>
-  ),
-  "Show me the new product images you made.": (
-    <div>
-      <p>Here are the new images I&apos;ve created for you:</p>
-
-      <div className="mt-3">
-        <p className="font-semibold">Multistone Opal Women&apos;s Watch | Listing ID: 987654321</p>
-        <div className="mt-2 relative h-64 w-full">
-          <Image
-            src="/images/watch.jpeg"
-            alt="Multistone Opal Women's Watch"
-            fill
-            className="object-contain rounded-md"
-          />
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <p className="font-semibold">Silver Garnet Earrings | Listing ID: 876543210</p>
-        <div className="mt-2 relative h-64 w-full">
-          <Image src="/images/earring.jpeg" alt="Silver Garnet Earrings" fill className="object-contain rounded-md" />
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <p className="font-semibold">Silver Cuff Bracelet | Listing ID: 765432109</p>
-        <div className="mt-2 relative h-64 w-full">
-          <Image src="/images/bracelet.jpeg" alt="Silver Cuff Bracelet" fill className="object-contain rounded-md" />
-        </div>
-      </div>
-    </div>
-  ),
-  "Can I see this week's Instagram posts?": (
-    <div className="space-y-6">
-      <p>Of course! Here are the Instagram posts we&apos;ve shared for your shop this week:</p>
-
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        <div className="w-[280px] flex-shrink-0">
-          <InstagramPost
-            imageSrc="/images/1.jpeg"
-            caption={`Check out this ring from my collection. it's a handcrafted sterling silver ring with a stunning 10mm natural white pearl.
-
-the detailed oxidized finish gives it a rustic, antique charm.
-
-the intricate branch design wrapping around the pearl makes it truly unique.
-
-perfect for adding a touch of elegance to any outfit. 🌿✨
-
-#ring #handmadejewellery #jewelry #finejewelry #jewelrylover`}
-          />
-        </div>
-
-        <div className="w-[280px] flex-shrink-0">
-          <InstagramPost
-            imageSrc="/images/2.jpeg"
-            caption={`This chain bracelet ring with moonstone and amethyst gemstones is a stunner. it has a heart-shaped ring that's linked to the bracelet, making it whimsical yet elegant.
-
-designed in our eco-friendly workshop, it's a unique handmade piece. 🌿🌸
-
-#chainbracelet #handmadejewellery #jewelrylover`}
-          />
-        </div>
-
-        <div className="w-[280px] flex-shrink-0">
-          <InstagramPost
-            imageSrc="/images/3.jpeg"
-            caption={`Here's our sterling silver wide cuff bracelet with gemstones.
-
-this beauty shines with its wavy, textured design and vibrant purple gemstones.
-
-handcrafted with care, it's a piece of art that stands out on any wrist.
-
-and there's a matching ring and earrings too 😉
-
-#jewellery #handmadejewellery #jewelrylover`}
-          />
-        </div>
-      </div>
-    </div>
-  ),
-  "Can you help me schedule an Instagram post for one of my products?": (
-    <ScheduleInstagramPost />
-  ),
-}
-
-// Add the new question to the quick suggestion buttons (both initial and ongoing chat)
-const quickSuggestions = [
-  "Can you give me a store performance update?",
-  "Which of my products are performing best right now?",
-  "Show me the new product images you made.",
-  "Can I see this week's Instagram posts?",
-  "Can you help me schedule an Instagram post for one of my products?",
 ]
 
 export default function ChatPage() {
@@ -275,6 +123,189 @@ export default function ChatPage() {
       }
     }, 1500)
   }
+
+  // Move predefinedResponses inside ChatPage so setMessages is in scope
+  const predefinedResponses: Record<string, React.ReactNode> = {
+    "Can you give me a store performance update?": (
+      <div>
+        <p>Here&apos;s a quick performance update for the past 7 days:</p>
+        <p className="mt-2">
+          Views: 2,145 (⬆️ up 18%)
+          <br />
+          Sales: 34 orders (⬇️ down 9%)
+          <br />
+          Revenue: $1,021.50
+          <br />
+          Conversion Rate: 1.59% (⬇️ down from 1.87%)
+        </p>
+        <p className="mt-2">
+          Your traffic is growing, which is great! That means your visibility is improving, likely thanks to optimized
+          listings and social content. Offer a time-limited promotion (e.g., 10% off for 48 hours) to boost conversions.
+        </p>
+      </div>
+    ),
+    "Which of my products are performing best right now?": (
+      <div>
+        <p>Here are your top 3 performing listings this week:</p>
+
+        <div className="mt-3 p-3 bg-pink-50 rounded-md">
+          <p className="font-semibold">1. Rainbow Tourmaline Stacking Ring</p>
+          <p>
+            • Listing ID: 987654321
+            <br />• Views: 512 | Favorites: 38 | Orders: 12
+            <br />🔗 <span className="text-pink-500">View on Etsy</span>
+          </p>
+          <p className="mt-2">
+            This one&apos;s really gaining traction. It might be worth highlighting in your next Instagram post or
+            featuring in a limited-time offer.
+          </p>
+        </div>
+
+        <div className="mt-3 p-3 bg-pink-50 rounded-md">
+          <p className="font-semibold">2. Minimalist Gold Hoop Earrings – 14K</p>
+          <p>
+            • Listing ID: 876543210
+            <br />• Views: 436 | Favorites: 27 | Orders: 9<br />🔗 <span className="text-pink-500">View on Etsy</span>
+          </p>
+          <p className="mt-2">
+            A consistent favorite! Clean designs like this often do well with updated close-up shots or lifestyle reels.
+          </p>
+        </div>
+
+        <div className="mt-3 p-3 bg-pink-50 rounded-md">
+          <p className="font-semibold">3. Dainty Birthstone Charm Necklace</p>
+          <p>
+            • Listing ID: 765432109
+            <br />• Views: 398 | Favorites: 31 | Orders: 8<br />🔗 <span className="text-pink-500">View on Etsy</span>
+          </p>
+          <p className="mt-2">
+            This one has great gift appeal — a carousel post or customer review might help drive more traffic.
+          </p>
+        </div>
+      </div>
+    ),
+    "Show me the new product images you made.": (
+      <div>
+        <p>Here are the new images I&apos;ve created for you:</p>
+
+        <div className="mt-3">
+          <p className="font-semibold">Multistone Opal Women&apos;s Watch | Listing ID: 987654321</p>
+          <div className="mt-2 relative h-64 w-full">
+            <Image
+              src="/images/watch.jpeg"
+              alt="Multistone Opal Women's Watch"
+              fill
+              className="object-contain rounded-md"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <p className="font-semibold">Silver Garnet Earrings | Listing ID: 876543210</p>
+          <div className="mt-2 relative h-64 w-full">
+            <Image src="/images/earring.jpeg" alt="Silver Garnet Earrings" fill className="object-contain rounded-md" />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <p className="font-semibold">Silver Cuff Bracelet | Listing ID: 765432109</p>
+          <div className="mt-2 relative h-64 w-full">
+            <Image src="/images/bracelet.jpeg" alt="Silver Cuff Bracelet" fill className="object-contain rounded-md" />
+          </div>
+        </div>
+      </div>
+    ),
+    "Can I see this week's Instagram posts?": (
+      <div className="space-y-6">
+        <p>Of course! Here are the Instagram posts we&apos;ve shared for your shop this week:</p>
+
+        <div className="flex gap-4 overflow-x-auto pb-4">
+          <div className="w-[280px] flex-shrink-0">
+            <InstagramPost
+              imageSrc="/images/1.jpeg"
+              caption={`Check out this ring from my collection. it's a handcrafted sterling silver ring with a stunning 10mm natural white pearl.
+
+the detailed oxidized finish gives it a rustic, antique charm.
+
+the intricate branch design wrapping around the pearl makes it truly unique.
+
+perfect for adding a touch of elegance to any outfit. 🌿✨
+
+#ring #handmadejewellery #jewelry #finejewelry #jewelrylover`}
+            />
+          </div>
+
+          <div className="w-[280px] flex-shrink-0">
+            <InstagramPost
+              imageSrc="/images/2.jpeg"
+              caption={`This chain bracelet ring with moonstone and amethyst gemstones is a stunner. it has a heart-shaped ring that's linked to the bracelet, making it whimsical yet elegant.
+
+designed in our eco-friendly workshop, it's a unique handmade piece. 🌿🌸
+
+#chainbracelet #handmadejewellery #jewelrylover`}
+            />
+          </div>
+
+          <div className="w-[280px] flex-shrink-0">
+            <InstagramPost
+              imageSrc="/images/3.jpeg"
+              caption={`Here's our sterling silver wide cuff bracelet with gemstones.
+
+this beauty shines with its wavy, textured design and vibrant purple gemstones.
+
+handcrafted with care, it's a piece of art that stands out on any wrist.
+
+and there's a matching ring and earrings too 😉
+
+#jewellery #handmadejewellery #jewelrylover`}
+            />
+          </div>
+        </div>
+      </div>
+    ),
+   "Can you help me schedule an Instagram post for one of my products?": (
+  <ScheduleInstagramPost
+    onScheduled={(confirmationBubble) => {
+      setMessages(prev => {
+        const last = prev[prev.length - 1];
+        let isThinking = false;
+        if (last && isValidElement(last.content)) {
+          const className = (last.content.props as any)?.className;
+          isThinking = typeof className === "string" && className.includes("animate-bounce-higher");
+        }
+        if (isThinking) {
+          return [
+            ...prev.slice(0, -1),
+            {
+              id: Date.now().toString(),
+              role: "assistant",
+              content: confirmationBubble,
+            },
+          ];
+        }
+        return [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: confirmationBubble,
+          },
+        ];
+      });
+    }}
+    setIsThinking={setIsThinking}
+  />
+),
+  }
+
+  // Add the new question to the quick suggestion buttons (both initial and ongoing chat)
+  const quickSuggestions = [
+    "Can you give me a store performance update?",
+    "Which of my products are performing best right now?",
+    "Show me the new product images you made.",
+    "Can I see this week's Instagram posts?",
+    "Can you help me schedule an Instagram post for one of my products?",
+  ]
 
   return (
     <TooltipProvider>
@@ -419,10 +450,13 @@ export default function ChatPage() {
 }
 
 // Add the ScheduleInstagramPost component
-function ScheduleInstagramPost() {
-  const [selectedProduct, setSelectedProduct] = useState<string | undefined>(undefined)
+function ScheduleInstagramPost({ onScheduled, setIsThinking }: { 
+  onScheduled: (confirmation: React.ReactNode) => void,
+  setIsThinking: (isThinking: boolean) => void 
+}) {
+  const [selectedProduct, setSelectedProduct] = useState<string>("")
   const [date, setDate] = useState<Date | undefined>(undefined)
-  const [selectedTime, setSelectedTime] = useState<string>("12:00")
+  const [selectedTime, setSelectedTime] = useState("9:00 AM")
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const timeOptions = [
@@ -432,6 +466,22 @@ function ScheduleInstagramPost() {
   const handleSubmit = () => {
     if (!selectedProduct || !date) return
     setIsSubmitted(true)
+    setIsThinking(true)  // Show thinking animation
+    setTimeout(() => {
+      setIsThinking(false)  // Hide thinking animation
+      const confirmation = (
+        <div className="max-w-[80%] p-4 rounded-[40px] bg-white text-black">
+          <p className="mb-4">Great! I've scheduled your Instagram post for {format(date!, "MMMM d, yyyy")} at {selectedTime}. Here's what will be posted:</p>
+          <div className="w-[280px]">
+            <InstagramPost
+              imageSrc={products.find(p => p.id === selectedProduct)?.image || ""}
+              caption={productCaptions[selectedProduct as keyof typeof productCaptions]}
+            />
+          </div>
+        </div>
+      )
+      onScheduled(confirmation)
+    }, 1500)
   }
 
   const productCaptions = {
@@ -456,29 +506,8 @@ this piece is unisex, because who needs labels anyway? 😏✨
 #jewelry #finejewelry #handmadejewellery`
   }
 
-  if (isSubmitted) {
-    const selectedProductData = products.find(p => p.id === selectedProduct)
-    return (
-      <div className="flex justify-start">
-        <div className="h-10 w-10 rounded-full overflow-hidden mr-2 flex-shrink-0">
-          <Image src="/images/emma.jpg" alt="Emma" width={40} height={40} className="object-cover" />
-        </div>
-        <div className="max-w-[80%] p-4 rounded-[40px] bg-white text-black">
-          <p className="mb-4">Great! I've scheduled your Instagram post for {format(date!, "MMMM d, yyyy")} at {selectedTime}. Here's what will be posted:</p>
-          
-          <div className="w-[280px]">
-            <InstagramPost
-              imageSrc={selectedProductData?.image || ""}
-              caption={productCaptions[selectedProduct as keyof typeof productCaptions]}
-            />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div>
+    <div className="max-w-[80%] p-4 rounded-[40px] bg-white text-black">
       <p>Absolutely! Just select the product you'd like to feature and choose the date you'd like it to go live.<br />👇</p>
       <div className="mt-6 flex flex-col gap-4 max-w-md">
         <div>
